@@ -6413,6 +6413,13 @@
   dependencies:
     "find-up" "^4.0.0"
 
+"pkg-dir@^5.0.0":
+  "integrity" "sha512-NPE8TDbzl/3YQYY7CSS228s3g2ollTFnc+Qi3tqmqJp9Vg2ovUpixcJEo2HJScN2Ez+kEaal6y70c0ehqJBJeA=="
+  "resolved" "https://registry.npmjs.org/pkg-dir/-/pkg-dir-5.0.0.tgz"
+  "version" "5.0.0"
+  dependencies:
+    "find-up" "^5.0.0"
+
 "pkg-up@^3.1.0":
   "integrity" "sha512-nDywThFk1i4BQK4twPQ6TA4RT8bDY96yeuCVBWL3ePARCiEKDRSrNGbFIgUJpLp+XeIR65v8ra7WuJOFUBtkMA=="
   "resolved" "https://registry.npmjs.org/pkg-up/-/pkg-up-3.1.0.tgz"
@@ -6609,6 +6616,14 @@
   "integrity" "sha512-7F6bD7B8Xsn3JllxcwHhFcsl9aHIig47+3eN4IHFNqfLhZr++3ElDrcqfMzugM+niWbaMi7bJ0kAkAL8eCpdWg=="
   "resolved" "https://registry.npmjs.org/react-native-gradle-plugin/-/react-native-gradle-plugin-0.71.18.tgz"
   "version" "0.71.18"
+
+"react-native-permissions@^3.8.0":
+  "integrity" "sha512-BfZ7ksgdpGchHZH8M/kxCGZbWeACANbnPmb3hNjVOMDQusc4PWlPpobX3eBqYMSKbpi7bMECeV9BVU4QuwAf9A=="
+  "resolved" "https://registry.npmjs.org/react-native-permissions/-/react-native-permissions-3.8.0.tgz"
+  "version" "3.8.0"
+  dependencies:
+    "picocolors" "^1.0.0"
+    "pkg-dir" "^5.0.0"
 
 "react-native-safe-area-context@^4.5.3":
   "integrity" "sha512-ihYeGDEBSkYH+1aWnadNhVtclhppVgd/c0tm4mj0+HV11FoiWJ8N6ocnnZnRLvM5Fxc+hUqxR9bm5AXU3rXiyA=="
