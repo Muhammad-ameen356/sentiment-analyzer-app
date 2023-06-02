@@ -1,1 +1,1 @@
-export * from "./BaseAreaView";
+export * from "./baseAreaView";

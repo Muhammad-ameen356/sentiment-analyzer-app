@@ -1,12 +1,9 @@
-import {Text} from "react-native";
-import {NavigationContainer} from "@react-navigation/native";
-import {BaseSafeAreaView} from "components";
+import { NavigationContainer } from "@react-navigation/native";
+import { Auth } from "./src/authentication";
 
 const App = () => (
   <NavigationContainer>
-    <BaseSafeAreaView>
-      <Text>Hello World</Text>
-    </BaseSafeAreaView>
+    <Auth />
   </NavigationContainer>
 );
 
