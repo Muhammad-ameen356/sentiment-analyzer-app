@@ -171,10 +171,10 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   buttonStyle: {
-    backgroundColor: "#7DE24E",
+    backgroundColor: theme.secondary_color,
     borderWidth: 0,
-    color: "#FFFFFF",
-    borderColor: "#7DE24E",
+    color: theme.white_color,
+    borderColor: theme.secondary_color,
     height: 40,
     alignItems: "center",
     borderRadius: 30,
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     marginBottom: 25,
   },
   buttonTextStyle: {
-    color: "#FFFFFF",
+    color: theme.white_color,
     paddingVertical: 10,
     fontSize: 16,
   },
@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
     borderColor: "#dadae8",
   },
   registerTextStyle: {
-    color: "#FFFFFF",
+    color: theme.white_color,
     textAlign: "center",
     fontWeight: "bold",
     fontSize: 14,
