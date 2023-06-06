@@ -4,7 +4,7 @@ import { BeforeAuthStack } from "stacks";
 
 const Auth = () => {
   // eslint-disable-next-line no-unused-vars
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
   return isLoggedIn ? <Dashboard /> : <BeforeAuthStack />;
 };
 
