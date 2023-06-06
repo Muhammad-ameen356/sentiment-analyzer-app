@@ -3,9 +3,11 @@ import { theme, micIcon, unitedFlag } from "constants";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Voice from "@react-native-voice/voice";
 import { useEffect, useState } from "react";
+import { microphonePermission } from "utils";
 
 const Dashboard = () => {
   const [isRecordingStart, setIsRecordingStart] = useState(false);
+  const [resultState, setResultState] = useState("");
 
   useEffect(() => {
     Voice.onSpeechStart = onSpeechStartHandler;
@@ -15,7 +17,12 @@ const Dashboard = () => {
     return () => {
       Voice.destroy().then(Voice.removeAllListeners);
     };
-  });
+  }, []);
+
+  Voice.onSpeechResults = (result) => setResultState(result.value[0]);
+  Voice.onSpeechEnd = () => setIsRecordingStart(false);
+
+  console.log(resultState, "resultState");
 
   const onSpeechStartHandler = (e) => {
     console.log(e, "start");
@@ -30,12 +37,16 @@ const Dashboard = () => {
   };
 
   const startRecording = async () => {
-    try {
-      setIsRecordingStart(true);
-      await Voice.start("en-Us");
-    } catch (error) {
-      setIsRecordingStart(false);
-      console.log(error);
+    const permissionResult = await microphonePermission();
+
+    if (permissionResult) {
+      try {
+        await Voice.start("en-Us");
+        setIsRecordingStart(true);
+      } catch (error) {
+        setIsRecordingStart(false);
+        console.log(error);
+      }
     }
   };
 
@@ -50,7 +61,7 @@ const Dashboard = () => {
   };
 
   const onSpeechVolumeChangedHandler = (e) => {
-    // console.log("onSpeechVolumeChanged: ", e);
+    console.log("onSpeechVolumeChanged: ", e);
   };
 
   return (
