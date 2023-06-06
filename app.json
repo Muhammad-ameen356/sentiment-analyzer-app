@@ -1,4 +1,9 @@
 {
   "name": "ProjectMobileApp",
-  "displayName": "ProjectMobileApp"
+  "displayName": "ProjectMobileApp",
+  "expo": {
+    "plugins": [
+      "@react-native-voice/voice"
+    ]
+  }
 }
