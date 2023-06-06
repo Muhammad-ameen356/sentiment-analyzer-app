@@ -13,6 +13,8 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
 } from "react-native";
+import { useDispatch } from "react-redux";
+import { login } from "store/actions";
 
 // import AsyncStorage from "@react-native-community/async-storage";
 
@@ -23,6 +25,7 @@ const LoginScreen = ({ navigation }) => {
   const [userPassword, setUserPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [errortext, setErrortext] = useState("");
+  const dispatch = useDispatch();
 
   const passwordInputRef = createRef();
 
@@ -38,42 +41,7 @@ const LoginScreen = ({ navigation }) => {
     }
     setLoading(true);
     const dataToSend = { email: userEmail, password: userPassword };
-    const formBody = [];
-    // for (const key in dataToSend) {
-    //   const encodedKey = encodeURIComponent(key);
-    //   const encodedValue = encodeURIComponent(dataToSend[key]);
-    //   formBody.push(`${encodedKey}=${encodedValue}`);
-    // }
-    // formBody = formBody.join("&");
-
-    // fetch("http://localhost:3000/api/user/login", {
-    //   method: "POST",
-    //   body: formBody,
-    //   headers: {
-    //     // Header Defination
-    //     "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-    //   },
-    // })
-    //   .then(response => response.json())
-    //   .then(responseJson => {
-    //     // Hide Loader
-    //     setLoading(false);
-    //     console.log(responseJson);
-    //     // If server response message same as Data Matched
-    //     if (responseJson.status === "success") {
-    //       AsyncStorage.setItem("user_id", responseJson.data.email);
-    //       console.log(responseJson.data.email);
-    //       navigation.replace("DrawerNavigationRoutes");
-    //     } else {
-    //       setErrortext(responseJson.msg);
-    //       console.log("Please check your email id or password");
-    //     }
-    //   })
-    //   .catch(error => {
-    //     // Hide Loader
-    //     setLoading(false);
-    //     console.error(error);
-    //   });
+    dispatch(login(dataToSend));
   };
 
   return (
