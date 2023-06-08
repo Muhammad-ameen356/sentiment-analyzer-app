@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { BaseSafeAreaView, Icon } from "components";
+import { BaseSafeAreaView, DashboardHistoryCard, Icon } from "components";
 import { theme, micIcon, unitedFlag } from "constants";
 import {
   Button,
@@ -17,6 +17,7 @@ import { useEffect, useId, useState } from "react";
 import { microphonePermission, multiplePermissionForRecordAudio } from "utils";
 import AudioRecorderPlayer from "react-native-audio-recorder-player";
 import RNFetchBlob from "rn-fetch-blob";
+import { analyzeData, emoji } from "__fixtures__";
 
 const audioRecorderPlayer = new AudioRecorderPlayer();
 
@@ -151,32 +152,8 @@ const Dashboard = ({ navigation }) => {
   //   }));
   // };
 
-  const DATA = [
-    {
-      id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
-      title: "First Item",
-    },
-    {
-      id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
-      title: "Second Item",
-    },
-    {
-      id: "58694a11110f-3da1-471f-bd96-145571e29d72",
-      title: "Third Item",
-    },
-    {
-      id: "586942222a0f-3da1-471f-bd96-145571e29d72",
-      title: "Fourth Item",
-    },
-    {
-      id: "58694a3330f-3da1-471f-bd96-145571e29d72",
-      title: "Fifth Item",
-    },
-  ];
-
   return (
     <View style={styles.main}>
-      {/* <BaseSafeAreaView> */}
       <SafeAreaView>
         <View style={styles.firstContainer}>
           <TouchableOpacity
@@ -206,7 +183,7 @@ const Dashboard = ({ navigation }) => {
         <View style={styles.thirdContainer}>
           <View style={styles.historyBTN}>
             <Text style={styles.history_text}>History</Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("History")}>
               <Text style={[styles.history_text, { textDecorationLine: "underline" }]}>
                 View all
               </Text>
@@ -214,25 +191,11 @@ const Dashboard = ({ navigation }) => {
           </View>
           <View style={styles.resultBoxMain}>
             <FlatList
-              data={DATA}
+              data={analyzeData}
               horizontal
               showsHorizontalScrollIndicator={false}
               renderItem={({ item, index }) => (
-                <View
-                  style={[
-                    styles.historyBox1,
-                    index === 0
-                      ? { marginVertical: 10, marginLeft: 0, marginRight: 10 }
-                      : { margin: 10 },
-                  ]}
-                >
-                  <View style={styles.resultBoxTextView}>
-                    <Text style={styles.resultBoxText}>{item?.title}</Text>
-                  </View>
-                  <View style={styles.resultBoxScore}>
-                    <Text style={styles.resultBoxScoreText}>2 / 5</Text>
-                  </View>
-                </View>
+                <DashboardHistoryCard key={item?.id} item={item} index={index} />
               )}
               keyExtractor={(item) => item.id}
             />
@@ -264,7 +227,6 @@ const Dashboard = ({ navigation }) => {
             <Button title="STOP" onPress={onStopPlay} /> */}
         </View>
       </SafeAreaView>
-      {/* </BaseSafeAreaView> */}
     </View>
   );
 };
@@ -376,33 +338,5 @@ const styles = StyleSheet.create({
     height: "80%",
     marginLeft: 30,
     marginRight: 30,
-    borderRadius: 15,
-  },
-  historyBox1: {
-    width: 200,
-    height: "90%",
-    margin: 10,
-    padding: 10,
-    borderRadius: 10,
-    backgroundColor: theme.primary_color,
-  },
-  resultBoxTextView: {
-    height: "80%",
-  },
-  resultBoxText: {
-    color: theme.white_color,
-  },
-  resultBoxScore: {
-    height: "20%",
-    alignItems: "flex-end",
-    borderTopColor: theme.primary_text_color,
-    borderTopWidth: 0.5,
-  },
-  resultBoxScoreText: {
-    color: theme.secondary_color,
-    fontSize: 14,
-    paddingRight: 10,
-    marginTop: 7,
-    fontWeight: "bold",
   },
 });

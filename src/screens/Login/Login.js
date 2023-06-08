@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { BaseSafeAreaView } from "components";
+import { BaseSafeAreaView, Icon } from "components";
 import { logo, theme } from "constants";
 import { useState, createRef } from "react";
 import {
@@ -65,9 +65,17 @@ const LoginScreen = ({ navigation }) => {
                     width: "80%",
                     height: 200,
                     resizeMode: "contain",
-                    margin: 30,
+                    margin: 10,
                   }}
                 />
+                <View style={styles.logoTextContainer}>
+                  <Icon
+                    iconFrom="MaterialIcons"
+                    iconName="graphic-eq"
+                    color={theme.secondary_color}
+                  />
+                  <Text style={styles.logoText}>Speak with Tahoe</Text>
+                </View>
               </View>
               <View style={styles.SectionStyle}>
                 <TextInput
@@ -177,5 +185,15 @@ const styles = StyleSheet.create({
     color: "red",
     textAlign: "center",
     fontSize: 14,
+  },
+  logoText: {
+    // backgroundColor: "red",
+    fontSize: 24,
+    fontWeight: "bold",
+    color: theme.white_color,
+    paddingHorizontal: 20,
+  },
+  logoTextContainer: {
+    flexDirection: "row",
   },
 });
