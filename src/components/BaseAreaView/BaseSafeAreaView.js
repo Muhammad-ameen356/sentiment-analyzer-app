@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -14,14 +13,13 @@ const styles = StyleSheet.create({
   },
 });
 
-const BaseSafeAreaView = ({children}) => (
+const BaseSafeAreaView = ({ children }) => (
   <SafeAreaView style={styles.flex}>
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={styles.flex}>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        {children}
-      </TouchableWithoutFeedback>
+      style={styles.flex}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>{children}</TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   </SafeAreaView>
 );

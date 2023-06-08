@@ -5,7 +5,7 @@ const initialState = {
   isLoading: false,
   errorMessage: "",
   successMessage: "",
-  isLogin: false,
+  isLogin: true,
 };
 
 const LoginReducer = createSlice({

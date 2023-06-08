@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { Dashboard } from "screens";
+import { Dashboard, History } from "screens";
 import { BeforeAuthStack } from "stacks";
 import {
   DrawerContentScrollView,
@@ -9,15 +8,16 @@ import {
 import { Text, TouchableOpacity, View, StyleSheet, Image } from "react-native";
 import { profileImage, theme } from "constants";
 import { Icon } from "components";
+import { useSelector } from "react-redux";
 
 const Drawer = createDrawerNavigator();
 
-const studentsDrawerIcon = ({ focused, size }, { iconName, iconFrom }) => (
+const drawerIcon = ({ focused, size }, { iconName, iconFrom }) => (
   <Icon
     iconFrom={iconFrom}
     iconName={iconName}
     size={size}
-    color={focused ? theme.secondary_color : "#fff"}
+    color={focused ? theme.secondary_color : theme.white_color}
   />
 );
 
@@ -35,10 +35,8 @@ const customDrawerContent = (props) => {
           <Image source={profileImage} style={styles.profileImage} />
         </View>
         <Text style={styles.username}>John Doe</Text>
-        {/* Additional profile information can be added here */}
       </View>
 
-      {/* Drawer Items */}
       <DrawerContentScrollView>
         <DrawerItemList {...props} />
       </DrawerContentScrollView>
@@ -65,22 +63,31 @@ const DrawerComponent = () => (
     }}
   >
     <Drawer.Screen
-      op
-      name="Analyzer"
+      name="Home"
       component={Dashboard}
       options={{
+        animation: "slide_from_right",
         headerShown: false,
         drawerIcon: (e) =>
-          studentsDrawerIcon(e, { iconName: "md-rocket-outline", iconFrom: "Ionicons" }),
+          drawerIcon(e, { iconName: "google-analytics", iconFrom: "MaterialCommunityIcons" }),
+      }}
+    />
+    <Drawer.Screen
+      name="History"
+      component={History}
+      options={{
+        animation: "slide_from_bootm",
+        headerShown: false,
+        drawerIcon: (e) =>
+          drawerIcon(e, { iconName: "history", iconFrom: "MaterialCommunityIcons" }),
       }}
     />
   </Drawer.Navigator>
 );
 
 const Auth = () => {
-  // eslint-disable-next-line no-unused-vars
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
-  return isLoggedIn ? <DrawerComponent /> : <BeforeAuthStack />;
+  const { isLogin } = useSelector((state) => state.auth);
+  return isLogin ? <DrawerComponent /> : <BeforeAuthStack />;
 };
 
 const styles = StyleSheet.create({
@@ -91,7 +98,7 @@ const styles = StyleSheet.create({
   profileSection: {
     padding: 20,
     borderBottomWidth: 1,
-    borderBottomColor: "#ffffff",
+    borderBottomColor: theme.white_color,
     alignItems: "center",
     marginTop: 30,
   },
@@ -105,12 +112,13 @@ const styles = StyleSheet.create({
   },
   username: {
     fontSize: 18,
-    color: "#ffffff",
+    color: theme.white_color,
     fontWeight: "bold",
   },
   logoutButton: {
     paddingVertical: 10,
     paddingHorizontal: 20,
+    marginBottom: 20,
   },
   logoutButtonText: {
     color: theme.secondary_color,

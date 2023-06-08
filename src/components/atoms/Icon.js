@@ -1,5 +1,7 @@
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import PropTypes from "prop-types";
 
 // Add more props if require multiple times
@@ -7,6 +9,8 @@ const Icon = ({ iconFrom, iconName, size, color, additionalProps }) => {
   const icons = {
     FontAwesome,
     Ionicons,
+    MaterialCommunityIcons,
+    MaterialIcons,
   };
 
   const GenericIcon = icons[iconFrom];

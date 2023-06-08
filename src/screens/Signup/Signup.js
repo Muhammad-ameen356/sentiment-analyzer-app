@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+import { Icon } from "components";
 import { logo, theme } from "constants";
 import { useState, createRef } from "react";
 import {
@@ -95,8 +96,30 @@ const SignupScreen = ({ navigation }) => {
                   width: "80%",
                   height: 200,
                   resizeMode: "contain",
-                  margin: 30,
+                  margin: 10,
                 }}
+              />
+              <View style={styles.logoTextContainer}>
+                <Icon
+                  iconFrom="MaterialIcons"
+                  iconName="graphic-eq"
+                  color={theme.secondary_color}
+                />
+                <Text style={styles.logoText}>Speak with Tahoe</Text>
+              </View>
+            </View>
+            <View style={styles.SectionStyle}>
+              <TextInput
+                style={styles.inputStyle}
+                onChangeText={(UserEmail) => setUserEmail(UserEmail)}
+                placeholder="User Name" // dummy@abc.com
+                placeholderTextColor={theme.placeholder_color}
+                autoCapitalize="none"
+                keyboardType="email-address"
+                returnKeyType="next"
+                onSubmitEditing={() => passwordInputRef.current && passwordInputRef.current.focus()}
+                underlineColorAndroid="#f000"
+                blurOnSubmit={false}
               />
             </View>
             <View style={styles.SectionStyle}>
@@ -204,5 +227,15 @@ const styles = StyleSheet.create({
     color: "red",
     textAlign: "center",
     fontSize: 14,
+  },
+  logoText: {
+    // backgroundColor: "red",
+    fontSize: 24,
+    fontWeight: "bold",
+    color: theme.white_color,
+    paddingHorizontal: 20,
+  },
+  logoTextContainer: {
+    flexDirection: "row",
   },
 });
