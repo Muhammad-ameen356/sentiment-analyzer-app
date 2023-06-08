@@ -3,34 +3,28 @@ import { HistoryCard, Icon } from "components";
 import { theme } from "constants";
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-const History = ({ navigation }) => {
-  console.log("first");
-  return (
-    <View style={styles.main}>
-      <View style={styles.firstContainer}>
-        <TouchableOpacity
-          style={styles.drawerIconContainer}
-          onPress={() => navigation.openDrawer()}
-        >
-          <Icon iconFrom="Ionicons" iconName="menu" color="#fff" />
-        </TouchableOpacity>
+const History = ({ navigation }) => (
+  <View style={styles.main}>
+    <View style={styles.firstContainer}>
+      <TouchableOpacity style={styles.drawerIconContainer} onPress={() => navigation.openDrawer()}>
+        <Icon iconFrom="Ionicons" iconName="menu" color="#fff" />
+      </TouchableOpacity>
 
-        <View style={styles.textContainer}>
-          <Text style={styles.firstContainerText}>History</Text>
-        </View>
-      </View>
-      <View style={styles.resultBoxMain}>
-        <FlatList
-          data={analyzeData}
-          showsVerticalScrollIndicator={false}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={{ marginHorizontal: 18 }}
-          renderItem={({ item, index }) => <HistoryCard item={item} index={index} />}
-        />
+      <View style={styles.textContainer}>
+        <Text style={styles.firstContainerText}>History</Text>
       </View>
     </View>
-  );
-};
+    <View style={styles.resultBoxMain}>
+      <FlatList
+        data={analyzeData}
+        showsVerticalScrollIndicator={false}
+        keyExtractor={(item) => item.id}
+        contentContainerStyle={{ marginHorizontal: 18 }}
+        renderItem={({ item, index }) => <HistoryCard item={item} index={index} />}
+      />
+    </View>
+  </View>
+);
 
 export default History;
 
