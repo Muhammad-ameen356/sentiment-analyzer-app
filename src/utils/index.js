@@ -1,2 +1,2 @@
-export { microphonePermission } from "./permission";
+export { microphonePermission, multiplePermissionForRecordAudio } from "./permission";
 export { default as fetcher } from "./fetcher";

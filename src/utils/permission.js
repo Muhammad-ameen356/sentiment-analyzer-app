@@ -1,4 +1,4 @@
-import { isIos } from "constants";
+import { isAndroid, isIos } from "constants";
 import { PERMISSIONS, RESULTS, request } from "react-native-permissions";
 
 export const microphonePermission = async () => {
@@ -21,6 +21,28 @@ export const microphonePermission = async () => {
     });
     if (granted === RESULTS.GRANTED) {
       return true;
+    }
+    return false;
+  } catch (err) {
+    return false;
+  }
+};
+
+export const multiplePermissionForRecordAudio = async () => {
+  try {
+    if (isAndroid) {
+      const recordAudio = await request(PERMISSIONS.ANDROID.RECORD_AUDIO);
+      const writeStorage = await request(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE);
+      const readStorage = await request(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE);
+
+      if (
+        recordAudio === RESULTS.GRANTED &&
+        writeStorage === RESULTS.GRANTED &&
+        readStorage === RESULTS.GRANTED
+      ) {
+        return true;
+      }
+      return false;
     }
     return false;
   } catch (err) {
