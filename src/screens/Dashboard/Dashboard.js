@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { BaseSafeAreaView } from "components";
+import { BaseSafeAreaView, Icon } from "components";
 import { theme, micIcon, unitedFlag } from "constants";
 import {
   Button,
@@ -20,7 +20,7 @@ import RNFetchBlob from "rn-fetch-blob";
 
 const audioRecorderPlayer = new AudioRecorderPlayer();
 
-const Dashboard = () => {
+const Dashboard = ({ navigation }) => {
   const [isRecordingStart, setIsRecordingStart] = useState(false);
   const [resultState, setResultState] = useState("");
   const [state, setState] = useState();
@@ -178,83 +178,90 @@ const Dashboard = () => {
     <View style={styles.main}>
       {/* <BaseSafeAreaView> */}
       <SafeAreaView>
-        <View>
-          <View style={styles.firstContainer}>
+        <View style={styles.firstContainer}>
+          <TouchableOpacity
+            style={styles.drawerIconContainer}
+            onPress={() => navigation.openDrawer()}
+          >
+            <Icon iconFrom="Ionicons" iconName="menu" color="#fff" />
+          </TouchableOpacity>
+
+          <View style={styles.textContainer}>
             <Text style={styles.firstContainerText}>
               {isRecordingStart ? "Listening..." : "Analyze your audio"}
             </Text>
           </View>
-          <View style={styles.secondContainer}>
-            <View style={styles.box1}>
-              <View style={styles.flag_language}>
-                <Image style={styles.flag_language_image} source={unitedFlag} />
-                <Text style={styles.flag_language_text}>English</Text>
-              </View>
-              <View style={styles.second_inner_box}>
-                <Text style={styles.box1Text}>We Say What we think, right</Text>
-              </View>
+        </View>
+        <View style={styles.secondContainer}>
+          <View style={styles.box1}>
+            <View style={styles.flag_language}>
+              <Image style={styles.flag_language_image} source={unitedFlag} />
+              <Text style={styles.flag_language_text}>English</Text>
+            </View>
+            <View style={styles.second_inner_box}>
+              <Text style={styles.box1Text}>We Say What we think, right</Text>
             </View>
           </View>
-          <View style={styles.thirdContainer}>
-            <View style={styles.historyBTN}>
-              <Text style={styles.history_text}>History</Text>
-              <TouchableOpacity>
-                <Text style={[styles.history_text, { textDecorationLine: "underline" }]}>
-                  View all
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.resultBoxMain}>
-              <FlatList
-                data={DATA}
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                renderItem={({ item, index }) => (
-                  <View
-                    style={[
-                      styles.historyBox1,
-                      index === 0
-                        ? { marginVertical: 10, marginLeft: 0, marginRight: 10 }
-                        : { margin: 10 },
-                    ]}
-                  >
-                    <View style={styles.resultBoxTextView}>
-                      <Text style={styles.resultBoxText}>{item?.title}</Text>
-                    </View>
-                    <View style={styles.resultBoxScore}>
-                      <Text style={styles.resultBoxScoreText}>2 / 5</Text>
-                    </View>
-                  </View>
-                )}
-                keyExtractor={(item) => item.id}
-              />
-            </View>
-          </View>
-          <View style={styles.fourthContainer}>
-            <TouchableOpacity
-              onPress={
-                isRecordingStart
-                  ? () => {
-                      stopRecognizing();
-                      // stopRecording();
-                    }
-                  : () => {
-                      startRecognizing();
-                      // startRecording();
-                    }
-              }
-            >
-              <View style={styles.micIconBox}>
-                {isRecordingStart ? (
-                  <View style={styles.stopMicIcon} />
-                ) : (
-                  <Image style={styles.micIcon} source={micIcon} />
-                )}
-              </View>
+        </View>
+        <View style={styles.thirdContainer}>
+          <View style={styles.historyBTN}>
+            <Text style={styles.history_text}>History</Text>
+            <TouchableOpacity>
+              <Text style={[styles.history_text, { textDecorationLine: "underline" }]}>
+                View all
+              </Text>
             </TouchableOpacity>
-            {/* <Button title="PLAY" onPress={onStartPlay} />
-            <Button title="STOP" onPress={onStopPlay} /> */}
           </View>
+          <View style={styles.resultBoxMain}>
+            <FlatList
+              data={DATA}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              renderItem={({ item, index }) => (
+                <View
+                  style={[
+                    styles.historyBox1,
+                    index === 0
+                      ? { marginVertical: 10, marginLeft: 0, marginRight: 10 }
+                      : { margin: 10 },
+                  ]}
+                >
+                  <View style={styles.resultBoxTextView}>
+                    <Text style={styles.resultBoxText}>{item?.title}</Text>
+                  </View>
+                  <View style={styles.resultBoxScore}>
+                    <Text style={styles.resultBoxScoreText}>2 / 5</Text>
+                  </View>
+                </View>
+              )}
+              keyExtractor={(item) => item.id}
+            />
+          </View>
+        </View>
+        <View style={styles.fourthContainer}>
+          <TouchableOpacity
+            onPress={
+              isRecordingStart
+                ? () => {
+                    stopRecognizing();
+                    // stopRecording();
+                  }
+                : () => {
+                    startRecognizing();
+                    // startRecording();
+                  }
+            }
+          >
+            <View style={styles.micIconBox}>
+              {isRecordingStart ? (
+                <View style={styles.stopMicIcon} />
+              ) : (
+                <Image style={styles.micIcon} source={micIcon} />
+              )}
+            </View>
+          </TouchableOpacity>
+          {/* <Button title="PLAY" onPress={onStartPlay} />
+            <Button title="STOP" onPress={onStopPlay} /> */}
         </View>
       </SafeAreaView>
       {/* </BaseSafeAreaView> */}
@@ -271,8 +278,20 @@ const styles = StyleSheet.create({
   },
   firstContainer: {
     height: "5%",
-    justifyContent: "flex-end",
+    flexDirection: "row",
+    paddingTop: 10,
+    marginHorizontal: 25,
+  },
+  textContainer: {
+    marginTop: 4,
+    flex: 1,
     alignItems: "center",
+  },
+  firstContainerText: {
+    fontSize: 18,
+    color: theme.secondary_color,
+    textTransform: "uppercase",
+    fontWeight: "bold",
   },
   secondContainer: {
     height: "45%",
@@ -286,12 +305,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
   },
-  firstContainerText: {
-    fontSize: 18,
-    color: theme.secondary_color,
-    textTransform: "uppercase",
-    fontWeight: "bold",
-  },
+
   box1: {
     height: "85%",
     margin: 30,

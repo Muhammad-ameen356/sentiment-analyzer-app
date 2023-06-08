@@ -1,3 +1,4 @@
+import "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
 import { Auth } from "authentication";
 import { Provider } from "react-redux";

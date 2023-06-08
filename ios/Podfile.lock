@@ -431,11 +431,42 @@ PODS:
     - React-Core
   - RNCAsyncStorage (1.18.1):
     - React-Core
+  - RNGestureHandler (2.10.2):
+    - React-Core
   - RNPermissions (3.8.0):
     - React-Core
+  - RNReanimated (2.17.0):
+    - DoubleConversion
+    - FBLazyVector
+    - FBReactNativeSpec
+    - glog
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React-callinvoker
+    - React-Core
+    - React-Core/DevSupport
+    - React-Core/RCTWebSocket
+    - React-CoreModules
+    - React-cxxreact
+    - React-jsi
+    - React-jsiexecutor
+    - React-jsinspector
+    - React-RCTActionSheet
+    - React-RCTAnimation
+    - React-RCTBlob
+    - React-RCTImage
+    - React-RCTLinking
+    - React-RCTNetwork
+    - React-RCTSettings
+    - React-RCTText
+    - ReactCommon/turbomodule/core
+    - Yoga
   - RNScreens (3.20.0):
     - React-Core
     - React-RCTImage
+  - RNVectorIcons (9.2.0):
+    - React-Core
   - SocketRocket (0.6.0)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
@@ -506,8 +537,11 @@ DEPENDENCIES:
   - rn-fetch-blob (from `../node_modules/rn-fetch-blob`)
   - RNAudioRecorderPlayer (from `../node_modules/react-native-audio-recorder-player`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
+  - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNPermissions (from `../node_modules/react-native-permissions`)
+  - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -608,10 +642,16 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-audio-recorder-player"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-async-storage/async-storage"
+  RNGestureHandler:
+    :path: "../node_modules/react-native-gesture-handler"
   RNPermissions:
     :path: "../node_modules/react-native-permissions"
+  RNReanimated:
+    :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNVectorIcons:
+    :path: "../node_modules/react-native-vector-icons"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -669,8 +709,11 @@ SPEC CHECKSUMS:
   rn-fetch-blob: f065bb7ab7fb48dd002629f8bdcb0336602d3cba
   RNAudioRecorderPlayer: 6638283925b46808310c9fdf803ebabc3abdbadc
   RNCAsyncStorage: b90b71f45b8b97be43bc4284e71a6af48ac9f547
-  RNPermissions: dcf6eacab3ca94955fb41316365f444ad2f60673
+  RNGestureHandler: f75d81410b40aaa99e71ae8f8bb7a88620c95042
+  RNPermissions: 215c54462104b3925b412b0fb3c9c497b21c358b
+  RNReanimated: f186e85d9f28c9383d05ca39e11dd194f59093ec
   RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f
+  RNVectorIcons: fcc2f6cb32f5735b586e66d14103a74ce6ad61f8
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   Yoga: 065f0b74dba4832d6e328238de46eb72c5de9556
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a

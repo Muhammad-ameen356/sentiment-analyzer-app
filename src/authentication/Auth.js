@@ -1,11 +1,122 @@
 import { useState } from "react";
 import { Dashboard } from "screens";
 import { BeforeAuthStack } from "stacks";
+import {
+  DrawerContentScrollView,
+  DrawerItemList,
+  createDrawerNavigator,
+} from "@react-navigation/drawer";
+import { Text, TouchableOpacity, View, StyleSheet, Image } from "react-native";
+import { profileImage, theme } from "constants";
+import { Icon } from "components";
+
+const Drawer = createDrawerNavigator();
+
+const studentsDrawerIcon = ({ focused, size }, { iconName, iconFrom }) => (
+  <Icon
+    iconFrom={iconFrom}
+    iconName={iconName}
+    size={size}
+    color={focused ? theme.secondary_color : "#fff"}
+  />
+);
+
+const customDrawerContent = (props) => {
+  const handleLogout = () => {
+    // Perform logout logic here
+    // Example: navigation.navigate('Login');
+  };
+
+  return (
+    <View style={styles.drawerContainer}>
+      {/* Profile Section */}
+      <View style={styles.profileSection}>
+        <View style={styles.profileImageContainer}>
+          <Image source={profileImage} style={styles.profileImage} />
+        </View>
+        <Text style={styles.username}>John Doe</Text>
+        {/* Additional profile information can be added here */}
+      </View>
+
+      {/* Drawer Items */}
+      <DrawerContentScrollView>
+        <DrawerItemList {...props} />
+      </DrawerContentScrollView>
+
+      {/* Logout Button */}
+      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+        <Text style={styles.logoutButtonText}>Logout</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+const DrawerComponent = () => (
+  <Drawer.Navigator
+    initialRouteName="Home"
+    drawerContent={customDrawerContent}
+    screenOptions={{
+      drawerActiveTintColor: theme.primary_text_color,
+      drawerItemStyle: {},
+      drawerLabelStyle: {
+        color: theme.white_color,
+        fontSize: 16,
+      },
+    }}
+  >
+    <Drawer.Screen
+      op
+      name="Analyzer"
+      component={Dashboard}
+      options={{
+        headerShown: false,
+        drawerIcon: (e) =>
+          studentsDrawerIcon(e, { iconName: "md-rocket-outline", iconFrom: "Ionicons" }),
+      }}
+    />
+  </Drawer.Navigator>
+);
 
 const Auth = () => {
   // eslint-disable-next-line no-unused-vars
   const [isLoggedIn, setIsLoggedIn] = useState(true);
-  return isLoggedIn ? <Dashboard /> : <BeforeAuthStack />;
+  return isLoggedIn ? <DrawerComponent /> : <BeforeAuthStack />;
 };
+
+const styles = StyleSheet.create({
+  drawerContainer: {
+    flex: 1,
+    backgroundColor: theme.main_black,
+  },
+  profileSection: {
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ffffff",
+    alignItems: "center",
+    marginTop: 30,
+  },
+  profileImageContainer: {
+    marginBottom: 10,
+  },
+  profileImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+  },
+  username: {
+    fontSize: 18,
+    color: "#ffffff",
+    fontWeight: "bold",
+  },
+  logoutButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+  },
+  logoutButtonText: {
+    color: theme.secondary_color,
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+});
 
 export default Auth;
