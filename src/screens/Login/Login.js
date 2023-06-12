@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { BaseSafeAreaView, Icon } from "components";
 import { logo, theme } from "constants";
 import { useState, createRef } from "react";
@@ -13,17 +12,14 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
 } from "react-native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { login } from "store/actions";
 
-// import AsyncStorage from "@react-native-community/async-storage";
-
-// import Loader from "./Components/Loader";
-
 const LoginScreen = ({ navigation }) => {
+  const { isLoading } = useSelector((state) => state.auth);
+
   const [userEmail, setUserEmail] = useState("");
   const [userPassword, setUserPassword] = useState("");
-  const [loading, setLoading] = useState(false);
   const [errortext, setErrortext] = useState("");
   const dispatch = useDispatch();
 
@@ -39,9 +35,10 @@ const LoginScreen = ({ navigation }) => {
       alert("Please fill Password");
       return;
     }
-    setLoading(true);
-    const dataToSend = { email: userEmail, password: userPassword };
-    dispatch(login(dataToSend));
+
+    const userData = { email: userEmail, password: userPassword };
+
+    dispatch(login({ userData }));
   };
 
   return (
@@ -81,7 +78,7 @@ const LoginScreen = ({ navigation }) => {
                 <TextInput
                   style={styles.inputStyle}
                   onChangeText={(UserEmail) => setUserEmail(UserEmail)}
-                  placeholder="Enter Email" // dummy@abc.com
+                  placeholder="Enter Email"
                   placeholderTextColor="#8b9cb5"
                   autoCapitalize="none"
                   keyboardType="email-address"
@@ -97,7 +94,7 @@ const LoginScreen = ({ navigation }) => {
                 <TextInput
                   style={styles.inputStyle}
                   onChangeText={(UserPassword) => setUserPassword(UserPassword)}
-                  placeholder="Enter Password" // 12345
+                  placeholder="Enter Password"
                   placeholderTextColor="#8b9cb5"
                   keyboardType="default"
                   ref={passwordInputRef}
@@ -110,7 +107,12 @@ const LoginScreen = ({ navigation }) => {
               </View>
               {errortext !== "" ? <Text style={styles.errorTextStyle}>{errortext}</Text> : null}
               <TouchableOpacity
-                style={styles.buttonStyle}
+                style={[
+                  styles.buttonStyle,
+                  isLoading
+                    ? { backgroundColor: theme.primary_color }
+                    : { backgroundColor: theme.secondary_color },
+                ]}
                 activeOpacity={0.5}
                 onPress={handleSubmitPress}
               >
@@ -135,7 +137,7 @@ const styles = StyleSheet.create({
   mainBody: {
     flex: 1,
     justifyContent: "center",
-    backgroundColor: theme.primary_color,
+    backgroundColor: theme.main_black,
     alignContent: "center",
   },
   SectionStyle: {
@@ -147,7 +149,6 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   buttonStyle: {
-    backgroundColor: theme.secondary_color,
     borderWidth: 0,
     color: theme.white_color,
     borderColor: theme.secondary_color,
@@ -187,7 +188,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   logoText: {
-    // backgroundColor: "red",
     fontSize: 24,
     fontWeight: "bold",
     color: theme.white_color,

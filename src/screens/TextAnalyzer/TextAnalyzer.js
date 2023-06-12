@@ -9,6 +9,7 @@ import {
   SafeAreaView,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -19,27 +20,22 @@ import AudioRecorderPlayer from "react-native-audio-recorder-player";
 import RNFetchBlob from "rn-fetch-blob";
 import { analyzeData, emoji } from "__fixtures__";
 import { useDispatch, useSelector } from "react-redux";
-import { textCorrection } from "store/actions";
-import { audioAnalyzeData } from "store/reducers";
+import { analyzeText, getSuggestion, textCorrection } from "store/actions";
 
-const audioRecorderPlayer = new AudioRecorderPlayer();
-
-const Dashboard = ({ navigation }) => {
+const TextAnalyzer = ({ navigation }) => {
   const [isRecordingStart, setIsRecordingStart] = useState(false);
-  const [resultState, setResultState] = useState("");
-  const [countDemo, setCountDemo] = useState(1);
-  // const [state, setState] = useState();
+  const {
+    analyzer: { textAnalyzeResult, isLoading },
+  } = useSelector((state) => state);
+
+  const [text, setText] = useState("");
+  const [hintResponses, setHintResponses] = useState([]);
+
+  console.log(isLoading, "Loading");
+  console.log(textAnalyzeResult, "textAnalyzeResult");
+
   const uniqueId = useId();
   const dispatch = useDispatch();
-  const { voiceAnalyzeResult } = useSelector((state) => state.analyzer);
-
-  const { dirs } = RNFetchBlob.fs;
-  const path = Platform.select({
-    ios: "hello.m4a",
-    android: `${dirs.CacheDir}/${uniqueId}_analyzer.mp3`,
-  });
-
-  console.log(voiceAnalyzeResult, "voiceAnalyzeResult");
 
   const onRecordingStart = () => {
     setIsRecordingStart(true);
@@ -50,43 +46,40 @@ const Dashboard = ({ navigation }) => {
   };
 
   useEffect(() => {
-    Voice.onSpeechStart = onSpeechStartHandler;
-    Voice.onSpeechEnd = onSpeechEndHandler;
-    Voice.onSpeechResults = onSpeechResultsHandler;
-    Voice.onSpeechVolumeChanged = onSpeechVolumeChangedHandler;
+    Voice.onSpeechStart = onSpeechTextStartHandler;
+    Voice.onSpeechEnd = onSpeechTextEndHandler;
+    Voice.onSpeechResults = onSpeechTextResultsHandler;
+    Voice.onSpeechVolumeChanged = onSpeechTextVolumeChangedHandler;
     return () => {
       Voice.destroy().then(Voice.removeAllListeners);
     };
   }, []);
 
-  const onSpeechStartHandler = (e) => {
+  const onSpeechTextStartHandler = (e) => {
     console.log(e, "start");
   };
 
-  const onSpeechEndHandler = (e) => {
+  const onSpeechTextEndHandler = (e) => {
     console.log(e, "end");
     onRecordingEnd();
   };
 
-  const onSpeechResultsHandler = (e) => {
-    console.log(e.value[0], "result");
+  const onSpeechTextResultsHandler = (e) => {
     const speechData = {
       text: e.value[0],
     };
-
-    dispatch(audioAnalyzeData({ speechData }));
-
+    setText(speechData.text);
     // dispatch(textCorrection({ speechData }))
     //   .unwrap()
     //   .then((result) => {
-    //     console.log(result, "result");
+    //     dispatch(analyzeText({ result }));
     //   })
     //   .catch((err) => {
     //     console.log(err, "err");
     //   });
   };
 
-  const onSpeechVolumeChangedHandler = (e) => {
+  const onSpeechTextVolumeChangedHandler = (e) => {
     // console.log("onSpeechVolumeChanged: ", e);
   };
 
@@ -112,6 +105,22 @@ const Dashboard = ({ navigation }) => {
       onRecordingEnd();
     }
   };
+
+  const analyzeTextFunction = () => {};
+
+  const getSuggestionFunction = () => {
+    dispatch(getSuggestion({ text }))
+      .unwrap()
+      .then((result) => {
+        console.log(result, "result: ");
+        setHintResponses(result);
+      })
+      .catch((error) => {
+        console.warn(error, "err");
+      });
+  };
+
+  const updateAllText = async () => {};
 
   // For Recording
 
@@ -187,73 +196,109 @@ const Dashboard = ({ navigation }) => {
 
           <View style={styles.textContainer}>
             <Text style={styles.firstContainerText}>
-              {isRecordingStart ? "Listening..." : "Analyze your audio"}
+              {isRecordingStart ? "Listening..." : "Analyze your Text"}
             </Text>
           </View>
         </View>
         <View style={styles.secondContainer}>
-          <View style={styles.box1}>
-            <View style={styles.flag_language}>
+          {/* <View style={styles.box1}> */}
+          {/* <View style={styles.flag_language}>
               <Image style={styles.flag_language_image} source={unitedFlag} />
               <Text style={styles.flag_language_text}>English</Text>
-            </View>
-            <View style={styles.second_inner_box}>
+            </View> */}
+          {/* <View style={styles.second_inner_box}>
               <Text style={styles.box1Text}>We Say What we think, right</Text>
-            </View>
-          </View>
+            </View> */}
+          {/* </View> */}
+          <TextInput
+            style={styles.box1}
+            placeholder="Enter Text to Analyze"
+            placeholderTextColor={theme.white_color}
+            onChangeText={setText}
+            value={text}
+          />
         </View>
+        <View style={styles.buttonsView}>
+          <TouchableOpacity style={styles.button} onPress={analyzeTextFunction}>
+            <Text style={styles.btnText}> Analyze</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={getSuggestionFunction}>
+            <Text style={styles.btnText}> Get hint</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={updateAllText}>
+            <Text style={styles.btnText}> Update All</Text>
+          </TouchableOpacity>
+        </View>
+
         <View style={styles.thirdContainer}>
           <View style={styles.historyBTN}>
             <Text style={styles.history_text}>History</Text>
-            <TouchableOpacity onPress={() => navigation.navigate("History")}>
+            {/* <TouchableOpacity onPress={() => navigation.navigate("History")}>
               <Text style={[styles.history_text, { textDecorationLine: "underline" }]}>
                 View all
               </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
           <View style={styles.resultBoxMain}>
             <FlatList
-              data={voiceAnalyzeResult}
+              data={textAnalyzeResult}
               horizontal
               showsHorizontalScrollIndicator={false}
               renderItem={({ item, index }) => (
-                <DashboardHistoryCard key={item?.id} item={item} index={index} />
+                // <DashboardHistoryCard key={item?.id} item={item} index={index} />
+                <View
+                  style={[
+                    styles.historyBox1,
+                    index === 0
+                      ? { marginVertical: 10, marginLeft: 0, marginRight: 10 }
+                      : { margin: 10 },
+                  ]}
+                >
+                  <View style={styles.resultBoxTextView}>
+                    <View>
+                      <Text style={styles.resultBoxTextLabel}>{item?.sentenceSentiment}:</Text>
+                      <Text style={styles.resultBoxText}>{item?.correctText}</Text>
+                    </View>
+                  </View>
+                  <View style={styles.resultBoxScore}>
+                    <Text style={styles.resultBoxScoreText}>{emoji(item)}</Text>
+                    <Text style={styles.resultBoxScoreText}>{item?.score} / 5</Text>
+                  </View>
+                </View>
               )}
               keyExtractor={(item) => item.id}
             />
           </View>
         </View>
-        <View style={styles.fourthContainer}>
-          <TouchableOpacity
-            onPress={
-              isRecordingStart
-                ? () => {
-                    stopRecognizing();
-                    // stopRecording();
-                  }
-                : () => {
-                    startRecognizing();
-                    // startRecording();
-                  }
-            }
-          >
-            <View style={styles.micIconBox}>
-              {isRecordingStart ? (
-                <View style={styles.stopMicIcon} />
-              ) : (
-                <Image style={styles.micIcon} source={micIcon} />
-              )}
-            </View>
-          </TouchableOpacity>
-          {/* <Button title="PLAY" onPress={onStartPlay} />
-            <Button title="STOP" onPress={onStopPlay} /> */}
-        </View>
+        {/* <View style={styles.fourthContainer}>
+            <TouchableOpacity
+              onPress={
+                isRecordingStart
+                  ? () => {
+                      stopRecognizing();
+                    }
+                  : () => {
+                      startRecognizing();
+                    }
+              }
+            >
+              <View style={styles.micIconBox}>
+                {isRecordingStart ? (
+                  <View style={styles.stopMicIcon} />
+                ) : (
+                  <Image style={styles.micIcon} source={micIcon} />
+                )}
+              </View>
+            </TouchableOpacity>
+            <Button title="PLAY" onPress={onStartPlay} />
+            <Button title="STOP" onPress={onStopPlay} />
+          </View> */}
       </SafeAreaView>
     </View>
   );
 };
 
-export default Dashboard;
+export default TextAnalyzer;
 
 const styles = StyleSheet.create({
   main: {
@@ -261,7 +306,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   firstContainer: {
-    height: "5%",
+    height: 60,
     flexDirection: "row",
     paddingTop: 10,
     marginHorizontal: 25,
@@ -296,6 +341,8 @@ const styles = StyleSheet.create({
     backgroundColor: theme.primary_color,
     borderRadius: 15,
     padding: 20,
+    color: theme.white_color,
+    fontSize: 20,
   },
   box1Text: {
     fontSize: 26,
@@ -350,7 +397,7 @@ const styles = StyleSheet.create({
     marginLeft: 24,
     marginTop: 8,
     marginBottom: 8,
-    height: "10%",
+    height: "13%",
   },
   history_text: {
     color: theme.white_color,
@@ -360,5 +407,70 @@ const styles = StyleSheet.create({
     height: "80%",
     marginLeft: 30,
     marginRight: 30,
+  },
+
+  //   History Box
+
+  historyBox1: {
+    width: 200,
+    height: "90%",
+    padding: 10,
+    borderRadius: 10,
+    backgroundColor: theme.primary_color,
+  },
+  resultBoxText: {
+    color: theme.white_color,
+    marginTop: 8,
+  },
+  resultBoxTextView: {
+    height: "80%",
+    justifyContent: "space-between",
+  },
+  resultBoxTextLabel: {
+    color: theme.white_color,
+    fontWeight: "bold",
+  },
+  resultBoxScore: {
+    height: "20%",
+    alignItems: "flex-end",
+    borderTopColor: theme.primary_text_color,
+    borderTopWidth: 0.5,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 8,
+  },
+  resultBoxScoreText: {
+    color: theme.secondary_color,
+    fontSize: 14,
+    fontWeight: "bold",
+  },
+
+  buttonStyle: {
+    backgroundColor: theme.placeholder_color,
+    paddingVertical: 10,
+    borderRadius: 10,
+    paddingHorizontal: 5,
+    marginVertical: 5,
+  },
+
+  //   input: {
+  //     height: 40,
+  //     margin: 12,
+  //     borderWidth: 1,
+  //     padding: 10,
+  //   },
+  buttonsView: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginTop: 6,
+  },
+  button: {
+    // padding: 20,
+    backgroundColor: theme.secondary_color,
+  },
+  btnText: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    fontWeight: "bold",
   },
 });

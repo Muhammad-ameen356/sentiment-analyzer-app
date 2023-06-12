@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { Icon } from "components";
 import { logo, theme } from "constants";
 import { useState, createRef } from "react";
@@ -13,16 +12,17 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
 } from "react-native";
-
-// import AsyncStorage from "@react-native-community/async-storage";
-
-// import Loader from "./Components/Loader";
+import { useDispatch, useSelector } from "react-redux";
+import { signup } from "store/actions";
 
 const SignupScreen = ({ navigation }) => {
+  const { isLoading } = useSelector((state) => state.auth);
   const [userEmail, setUserEmail] = useState("");
   const [userPassword, setUserPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [userName, setUserName] = useState("");
   const [errortext, setErrortext] = useState("");
+
+  const dispatch = useDispatch();
 
   const passwordInputRef = createRef();
 
@@ -36,44 +36,14 @@ const SignupScreen = ({ navigation }) => {
       alert("Please fill Password");
       return;
     }
-    setLoading(true);
-    const dataToSend = { email: userEmail, password: userPassword };
-    const formBody = [];
-    // for (const key in dataToSend) {
-    //   const encodedKey = encodeURIComponent(key);
-    //   const encodedValue = encodeURIComponent(dataToSend[key]);
-    //   formBody.push(`${encodedKey}=${encodedValue}`);
-    // }
-    // formBody = formBody.join("&");
+    if (!userName) {
+      alert("Please fill User Name");
+      return;
+    }
 
-    // fetch("http://localhost:3000/api/user/login", {
-    //   method: "POST",
-    //   body: formBody,
-    //   headers: {
-    //     // Header Defination
-    //     "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-    //   },
-    // })
-    //   .then(response => response.json())
-    //   .then(responseJson => {
-    //     // Hide Loader
-    //     setLoading(false);
-    //     console.log(responseJson);
-    //     // If server response message same as Data Matched
-    //     if (responseJson.status === "success") {
-    //       AsyncStorage.setItem("user_id", responseJson.data.email);
-    //       console.log(responseJson.data.email);
-    //       navigation.replace("DrawerNavigationRoutes");
-    //     } else {
-    //       setErrortext(responseJson.msg);
-    //       console.log("Please check your email id or password");
-    //     }
-    //   })
-    //   .catch(error => {
-    //     // Hide Loader
-    //     setLoading(false);
-    //     console.error(error);
-    //   });
+    const dataToSend = { userName, email: userEmail, password: userPassword };
+
+    dispatch(signup({ userData: dataToSend }));
   };
 
   return (
@@ -111,11 +81,10 @@ const SignupScreen = ({ navigation }) => {
             <View style={styles.SectionStyle}>
               <TextInput
                 style={styles.inputStyle}
-                onChangeText={(UserEmail) => setUserEmail(UserEmail)}
-                placeholder="User Name" // dummy@abc.com
+                onChangeText={(UserName) => setUserName(UserName)}
+                placeholder="User Name"
                 placeholderTextColor={theme.placeholder_color}
                 autoCapitalize="none"
-                keyboardType="email-address"
                 returnKeyType="next"
                 onSubmitEditing={() => passwordInputRef.current && passwordInputRef.current.focus()}
                 underlineColorAndroid="#f000"
@@ -153,7 +122,12 @@ const SignupScreen = ({ navigation }) => {
             </View>
             {errortext !== "" ? <Text style={styles.errorTextStyle}>{errortext}</Text> : null}
             <TouchableOpacity
-              style={styles.buttonStyle}
+              style={[
+                styles.buttonStyle,
+                isLoading
+                  ? { backgroundColor: theme.primary_color }
+                  : { backgroundColor: theme.secondary_color },
+              ]}
               activeOpacity={0.5}
               onPress={handleSubmitPress}
             >
@@ -177,7 +151,7 @@ const styles = StyleSheet.create({
   mainBody: {
     flex: 1,
     justifyContent: "center",
-    backgroundColor: theme.primary_color,
+    backgroundColor: theme.main_black,
     alignContent: "center",
   },
   SectionStyle: {
