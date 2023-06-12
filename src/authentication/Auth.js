@@ -8,7 +8,9 @@ import {
 import { Text, TouchableOpacity, View, StyleSheet, Image } from "react-native";
 import { profileImage, theme } from "constants";
 import { Icon } from "components";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { userLogout } from "store/reducers";
+import { TextAnalyzer } from "screens/TextAnalyzer";
 
 const Drawer = createDrawerNavigator();
 
@@ -22,9 +24,9 @@ const drawerIcon = ({ focused, size }, { iconName, iconFrom }) => (
 );
 
 const customDrawerContent = (props) => {
+  const dispatch = useDispatch();
   const handleLogout = () => {
-    // Perform logout logic here
-    // Example: navigation.navigate('Login');
+    dispatch(userLogout());
   };
 
   return (
@@ -73,10 +75,20 @@ const DrawerComponent = () => (
       }}
     />
     <Drawer.Screen
+      name="TextAnalyzer"
+      component={TextAnalyzer}
+      options={{
+        title: "Text Analyzer",
+        animation: "slide_from_right",
+        headerShown: false,
+        drawerIcon: (e) => drawerIcon(e, { iconName: "text", iconFrom: "MaterialCommunityIcons" }),
+      }}
+    />
+    <Drawer.Screen
       name="History"
       component={History}
       options={{
-        animation: "slide_from_bootm",
+        animation: "slide_from_right",
         headerShown: false,
         drawerIcon: (e) =>
           drawerIcon(e, { iconName: "history", iconFrom: "MaterialCommunityIcons" }),
@@ -86,8 +98,8 @@ const DrawerComponent = () => (
 );
 
 const Auth = () => {
-  const { isLogin } = useSelector((state) => state.auth);
-  return isLogin ? <DrawerComponent /> : <BeforeAuthStack />;
+  const { isLoggedIn } = useSelector((state) => state.auth);
+  return !isLoggedIn ? <DrawerComponent /> : <BeforeAuthStack />;
 };
 
 const styles = StyleSheet.create({

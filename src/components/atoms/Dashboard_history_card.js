@@ -10,8 +10,8 @@ const DashboardHistoryCard = ({ item, index }) => (
     ]}
   >
     <View style={styles.resultBoxTextView}>
-      <Text style={styles.resultBoxTextLabel}>{item?.label}:</Text>
-      <Text style={styles.resultBoxText}>{item?.description}</Text>
+      <Text style={styles.resultBoxTextLabel}>{item?.sentimentDetails?.sentenceSentiment}:</Text>
+      <Text style={styles.resultBoxText}>{item?.remarks}</Text>
     </View>
     <View style={styles.resultBoxScore}>
       <Text style={styles.resultBoxScoreText}>{emoji(item)}</Text>
