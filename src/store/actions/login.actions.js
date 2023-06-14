@@ -1,5 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { API_URL } from "constants";
+import { Alert } from "react-native";
 import { fetcher } from "utils";
 
 export const login = createAsyncThunk("post/login", async ({ userData }, { rejectWithValue }) => {
@@ -12,6 +13,7 @@ export const login = createAsyncThunk("post/login", async ({ userData }, { rejec
     const data = await fetcher(options);
     return { ...data, password: userData.password };
   } catch (err) {
+    Alert.alert(err.code, err.message);
     return rejectWithValue(err?.response?.data);
   }
 });
@@ -27,6 +29,7 @@ export const signup = createAsyncThunk("post/signup", async ({ userData }, { rej
     const data = await fetcher(options);
     return { ...data, password: userData.password };
   } catch (err) {
+    Alert.alert(err.code, err.message);
     return rejectWithValue(err?.response?.data);
   }
 });

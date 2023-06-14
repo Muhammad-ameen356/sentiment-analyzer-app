@@ -1,5 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { API_URL } from "constants";
+import { Alert } from "react-native";
 import { fetcher } from "utils";
 
 export const textCorrection = createAsyncThunk(
@@ -14,7 +15,7 @@ export const textCorrection = createAsyncThunk(
       const data = await fetcher(options);
       return data;
     } catch (err) {
-      console.log(err, "err1");
+      Alert.alert(err.code, err.message);
       return rejectWithValue(err?.response?.data);
     }
   }
@@ -30,6 +31,7 @@ export const analyzeText = createAsyncThunk(
       const data = await fetcher(options);
       return { ...data, ...result };
     } catch (err) {
+      Alert.alert(err.code, err.message);
       return rejectWithValue(err?.response?.data);
     }
   }
@@ -45,6 +47,7 @@ export const getSuggestion = createAsyncThunk(
       const data = await fetcher(options);
       return data;
     } catch (err) {
+      Alert.alert(err.code, err.message);
       return rejectWithValue(err?.response?.data);
     }
   }
@@ -53,14 +56,20 @@ export const getSuggestion = createAsyncThunk(
 export const audioAnalyze = createAsyncThunk(
   "get/audioAnalyze",
   async ({ audioData }, { rejectWithValue }) => {
-    const options = {
-      url: `${API_URL.SPEECH_TEXT_API.AUDIO_ANALYZE}`,
-      body: audioData,
-    };
     try {
-      const data = await fetcher(options);
-      return data;
+      const formData = new FormData();
+      formData.append("audio", audioData);
+
+      const options = {
+        url: `${API_URL.SPEECH_TEXT_API.AUDIO_ANALYZE}`,
+        method: "POST",
+        body: formData,
+      };
+
+      const response = await fetch(options);
+      return response;
     } catch (err) {
+      Alert.alert(err.code, err.message);
       return rejectWithValue(err?.response?.data);
     }
   }

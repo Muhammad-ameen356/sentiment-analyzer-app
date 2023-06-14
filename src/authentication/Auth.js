@@ -99,7 +99,8 @@ const DrawerComponent = () => (
 
 const Auth = () => {
   const { isLoggedIn } = useSelector((state) => state.auth);
-  return !isLoggedIn ? <DrawerComponent /> : <BeforeAuthStack />;
+
+  return isLoggedIn ? <DrawerComponent /> : <BeforeAuthStack />;
 };
 
 const styles = StyleSheet.create({
