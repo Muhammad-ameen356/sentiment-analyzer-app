@@ -19,16 +19,15 @@ import AudioRecorderPlayer from "react-native-audio-recorder-player";
 import RNFetchBlob from "rn-fetch-blob";
 import { analyzeData, emoji } from "__fixtures__";
 import { useDispatch, useSelector } from "react-redux";
-import { textCorrection } from "store/actions";
+import { audioAnalyze, textCorrection } from "store/actions";
 import { audioAnalyzeData } from "store/reducers";
 
 const audioRecorderPlayer = new AudioRecorderPlayer();
 
 const Dashboard = ({ navigation }) => {
   const [isRecordingStart, setIsRecordingStart] = useState(false);
-  const [resultState, setResultState] = useState("");
-  const [countDemo, setCountDemo] = useState(1);
-  // const [state, setState] = useState();
+  const [audioState, setAudioState] = useState({});
+
   const uniqueId = useId();
   const dispatch = useDispatch();
   const { voiceAnalyzeResult } = useSelector((state) => state.analyzer);
@@ -39,8 +38,6 @@ const Dashboard = ({ navigation }) => {
     android: `${dirs.CacheDir}/${uniqueId}_analyzer.mp3`,
   });
 
-  console.log(voiceAnalyzeResult, "voiceAnalyzeResult");
-
   const onRecordingStart = () => {
     setIsRecordingStart(true);
   };
@@ -49,108 +46,106 @@ const Dashboard = ({ navigation }) => {
     setIsRecordingStart(false);
   };
 
-  useEffect(() => {
-    Voice.onSpeechStart = onSpeechStartHandler;
-    Voice.onSpeechEnd = onSpeechEndHandler;
-    Voice.onSpeechResults = onSpeechResultsHandler;
-    Voice.onSpeechVolumeChanged = onSpeechVolumeChangedHandler;
-    return () => {
-      Voice.destroy().then(Voice.removeAllListeners);
-    };
-  }, []);
+  // useEffect(() => {
+  //   Voice.onSpeechStart = onSpeechStartHandler;
+  //   Voice.onSpeechEnd = onSpeechEndHandler;
+  //   Voice.onSpeechResults = onSpeechResultsHandler;
+  //   Voice.onSpeechVolumeChanged = onSpeechVolumeChangedHandler;
+  //   return () => {
+  //     Voice.destroy().then(Voice.removeAllListeners);
+  //   };
+  // }, []);
 
-  const onSpeechStartHandler = (e) => {
-    console.log(e, "start");
-  };
+  // const onSpeechStartHandler = (e) => {
+  //   console.log(e, "start");
+  // };
 
-  const onSpeechEndHandler = (e) => {
-    console.log(e, "end");
-    onRecordingEnd();
-  };
+  // const onSpeechEndHandler = (e) => {
+  //   console.log(e, "end");
+  //   onRecordingEnd();
+  // };
 
-  const onSpeechResultsHandler = (e) => {
-    console.log(e.value[0], "result");
-    const speechData = {
-      text: e.value[0],
-    };
+  // const onSpeechResultsHandler = (e) => {
+  //   console.log(e.value[0], "result");
+  //   const speechData = {
+  //     text: e.value[0],
+  //   };
 
-    dispatch(audioAnalyzeData({ speechData }));
+  //   dispatch(audioAnalyzeData({ speechData }));
 
-    // dispatch(textCorrection({ speechData }))
-    //   .unwrap()
-    //   .then((result) => {
-    //     console.log(result, "result");
-    //   })
-    //   .catch((err) => {
-    //     console.log(err, "err");
-    //   });
-  };
+  //   // dispatch(textCorrection({ speechData }))
+  //   //   .unwrap()
+  //   //   .then((result) => {
+  //   //     console.log(result, "result");
+  //   //   })
+  //   //   .catch((err) => {
+  //   //     console.log(err, "err");
+  //   //   });
+  // };
 
-  const onSpeechVolumeChangedHandler = (e) => {
-    // console.log("onSpeechVolumeChanged: ", e);
-  };
+  // const onSpeechVolumeChangedHandler = (e) => {
+  //   // console.log("onSpeechVolumeChanged: ", e);
+  // };
 
-  const startRecognizing = async () => {
-    const permissionResult = await microphonePermission();
-    if (permissionResult) {
-      try {
-        await Voice.start("en-Us");
-        onRecordingStart();
-      } catch (error) {
-        onRecordingEnd();
-        console.log(error);
-      }
-    }
-  };
-
-  const stopRecognizing = async () => {
-    try {
-      await Voice.stop();
-    } catch (error) {
-      console.log(error);
-    } finally {
-      onRecordingEnd();
-    }
-  };
-
-  // For Recording
-
-  // const startRecording = async () => {
-  //   onRecordingStart();
-
-  //   const recordPermission = await multiplePermissionForRecordAudio();
-  //   console.log(recordPermission, "recordPermission");
-  //   if (recordPermission) {
-  //     const result = await audioRecorderPlayer.startRecorder(path);
-
-  //     audioRecorderPlayer.addRecordBackListener((e) => {
-  //       setState((prevState) => ({
-  //         ...prevState,
-  //         recordSecs: e.currentPosition,
-  //         recordTime: audioRecorderPlayer.mmssss(Math.floor(e.currentPosition)),
-  //       }));
-  //     });
-  //     console.log(result, "RESULT");
-  //     console.log(state, "state");
+  // const startRecognizing = async () => {
+  //   const permissionResult = await microphonePermission();
+  //   if (permissionResult) {
+  //     try {
+  //       await Voice.start("en-Us");
+  //       onRecordingStart();
+  //     } catch (error) {
+  //       onRecordingEnd();
+  //       console.log(error);
+  //     }
   //   }
   // };
 
-  // const stopRecording = async () => {
-  //   const result = await audioRecorderPlayer.stopRecorder();
-  //   audioRecorderPlayer.removeRecordBackListener();
-  //   setState((prevState) => ({
-  //     ...prevState,
-  //     recordSecs: 0,
-  //   }));
-  //   console.log(result);
-  //   onRecordingEnd();
+  // const stopRecognizing = async () => {
+  //   try {
+  //     await Voice.stop();
+  //   } catch (error) {
+  //     console.log(error);
+  //   } finally {
+  //     onRecordingEnd();
+  //   }
   // };
+
+  // For Recording
+
+  const startRecording = async () => {
+    onRecordingStart();
+
+    const recordPermission = await multiplePermissionForRecordAudio();
+
+    if (recordPermission) {
+      const result = await audioRecorderPlayer.startRecorder(path);
+
+      audioRecorderPlayer.addRecordBackListener((e) => {
+        setAudioState((prevState) => ({
+          ...prevState,
+          recordSecs: e.currentPosition,
+          recordTime: audioRecorderPlayer.mmssss(Math.floor(e.currentPosition)),
+        }));
+      });
+    }
+  };
+
+  const stopRecording = async () => {
+    const result = await audioRecorderPlayer.stopRecorder();
+    audioRecorderPlayer.removeRecordBackListener();
+    setAudioState((prevState) => ({
+      ...prevState,
+      recordSecs: 0,
+    }));
+    dispatch(audioAnalyze({ audioData: result }));
+    onRecordingEnd();
+  };
 
   // const onStartPlay = async () => {
   //   const msg = await audioRecorderPlayer.startPlayer(path);
   //   console.log(msg);
   //   audioRecorderPlayer.addPlayBackListener((e) => {
-  //     setState((prevState) => ({
+  //     setAudioState((prevState) => ({
   //       ...prevState,
   //       currentPositionSec: e.currentPosition,
   //       currentDurationSec: e.duration,
@@ -167,7 +162,7 @@ const Dashboard = ({ navigation }) => {
   // const onStopPlay = () => {
   //   audioRecorderPlayer.stopPlayer();
   //   audioRecorderPlayer.removePlayBackListener();
-  //   setState((prevState) => ({
+  //   setAudioState((prevState) => ({
   //     ...prevState,
   //     currentPositionSec: 0,
   //     currentDurationSec: 0,
@@ -228,12 +223,12 @@ const Dashboard = ({ navigation }) => {
             onPress={
               isRecordingStart
                 ? () => {
-                    stopRecognizing();
-                    // stopRecording();
+                    // stopRecognizing();
+                    stopRecording();
                   }
                 : () => {
-                    startRecognizing();
-                    // startRecording();
+                    // startRecognizing();
+                    startRecording();
                   }
             }
           >

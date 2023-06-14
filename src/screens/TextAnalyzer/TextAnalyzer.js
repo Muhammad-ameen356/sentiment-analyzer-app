@@ -29,10 +29,7 @@ const TextAnalyzer = ({ navigation }) => {
   } = useSelector((state) => state);
 
   const [text, setText] = useState("");
-  const [hintResponses, setHintResponses] = useState([]);
-
-  console.log(isLoading, "Loading");
-  console.log(textAnalyzeResult, "textAnalyzeResult");
+  const [hintResponses, setHintResponses] = useState({});
 
   const uniqueId = useId();
   const dispatch = useDispatch();
@@ -60,7 +57,6 @@ const TextAnalyzer = ({ navigation }) => {
   };
 
   const onSpeechTextEndHandler = (e) => {
-    console.log(e, "end");
     onRecordingEnd();
   };
 
@@ -69,14 +65,14 @@ const TextAnalyzer = ({ navigation }) => {
       text: e.value[0],
     };
     setText(speechData.text);
-    // dispatch(textCorrection({ speechData }))
-    //   .unwrap()
-    //   .then((result) => {
-    //     dispatch(analyzeText({ result }));
-    //   })
-    //   .catch((err) => {
-    //     console.log(err, "err");
-    //   });
+    dispatch(textCorrection({ speechData }))
+      .unwrap()
+      .then((result) => {
+        dispatch(analyzeText({ result }));
+      })
+      .catch((err) => {
+        console.log(err, "err");
+      });
   };
 
   const onSpeechTextVolumeChangedHandler = (e) => {
@@ -106,13 +102,14 @@ const TextAnalyzer = ({ navigation }) => {
     }
   };
 
-  const analyzeTextFunction = () => {};
+  const analyzeTextFunction = () => {
+    dispatch(analyzeText({ result: { text } }));
+  };
 
   const getSuggestionFunction = () => {
     dispatch(getSuggestion({ text }))
       .unwrap()
       .then((result) => {
-        console.log(result, "result: ");
         setHintResponses(result);
       })
       .catch((error) => {
@@ -120,7 +117,9 @@ const TextAnalyzer = ({ navigation }) => {
       });
   };
 
-  const updateAllText = async () => {};
+  const updateAllText = async () => {
+    setText(hintResponses?.suggestedText);
+  };
 
   // For Recording
 
@@ -270,29 +269,29 @@ const TextAnalyzer = ({ navigation }) => {
             />
           </View>
         </View>
-        {/* <View style={styles.fourthContainer}>
-            <TouchableOpacity
-              onPress={
-                isRecordingStart
-                  ? () => {
-                      stopRecognizing();
-                    }
-                  : () => {
-                      startRecognizing();
-                    }
-              }
-            >
-              <View style={styles.micIconBox}>
-                {isRecordingStart ? (
-                  <View style={styles.stopMicIcon} />
-                ) : (
-                  <Image style={styles.micIcon} source={micIcon} />
-                )}
-              </View>
-            </TouchableOpacity>
-            <Button title="PLAY" onPress={onStartPlay} />
-            <Button title="STOP" onPress={onStopPlay} />
-          </View> */}
+        <View style={styles.fourthContainer}>
+          <TouchableOpacity
+            onPress={
+              isRecordingStart
+                ? () => {
+                    stopRecognizing();
+                  }
+                : () => {
+                    startRecognizing();
+                  }
+            }
+          >
+            <View style={styles.micIconBox}>
+              {isRecordingStart ? (
+                <View style={styles.stopMicIcon} />
+              ) : (
+                <Image style={styles.micIcon} source={micIcon} />
+              )}
+            </View>
+          </TouchableOpacity>
+          {/* <Button title="PLAY" onPress={onStartPlay} />
+            <Button title="STOP" onPress={onStopPlay} /> */}
+        </View>
       </SafeAreaView>
     </View>
   );
@@ -323,7 +322,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   secondContainer: {
-    height: "45%",
+    height: "35%",
   },
   thirdContainer: {
     height: "30%",

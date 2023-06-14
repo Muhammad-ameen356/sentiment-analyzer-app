@@ -6,7 +6,7 @@ const initialState = {
   errorMessage: "",
   successMessage: "",
   userData: {},
-  isLoggedIn: true,
+  isLoggedIn: false,
 };
 
 const LoginReducer = createSlice({
@@ -34,9 +34,8 @@ const LoginReducer = createSlice({
     builder.addMatcher(isAnyOf(login.pending, signup.pending), (state) => {
       state.isLoading = true;
     });
-    builder.addMatcher(isAnyOf(login.rejected, signup.rejected), (state, { payload }) => {
+    builder.addMatcher(isAnyOf(login.rejected, signup.rejected), (state) => {
       state.isLoading = false;
-      console.log(payload, "payload");
     });
   },
 });
